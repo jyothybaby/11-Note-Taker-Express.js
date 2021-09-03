@@ -6,6 +6,8 @@ const uuid = require('./helpers/uuid');
 //const api = require("index.js")
 const util = require('util');
 
+const notes = require('./db/db.json');
+
 const app = express();
 var PORT = process.env.PORT || 3000;
 //const PORT = 3001;
@@ -20,14 +22,12 @@ app.use(express.static("public"));
 // app.get("/", (req, res) =>
 //   res.sendFile(path.join(__dirname, '/public/index.html'))
 //);
-// Get route for notes page
-app.get("/notes", (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/notes.html'))
-);
-// Get routes for Wildcard route
-app.get("*", (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/index.html'))
-);
+
+
+
+
+
+
 
 // Promise version of fs.readFile
 const readFromFile = util.promisify(fs.readFile);
@@ -39,7 +39,7 @@ const readFromFile = util.promisify(fs.readFile);
  *  @returns {void} Nothing
  */
  const writeToFile = (destination, content) =>
- fs.writeFile(destination, JSON.stringify(content, null, 4), (err) =>
+ fs.writeFile(destination, JSON.stringify(content, null, 2), (err) =>
    err ? console.error(err) : console.info(`\nData written to ${destination}`)
  );
 
@@ -72,22 +72,34 @@ app.get("/api/notes",(req,res) => {
 app.post("/api/notes",(req, res) => {
   console.info(`${req.method} request received to add a note`);
 
-  const { noteTitle, noteText } = req.body;
+  const {  title, text } = req.body;
 
-  if (noteTitle && noteText) {
-    const newNoteTake = {
-      noteTitle,
-      noteText,
+  if (req.body) {
+    const newNote = {
+      title,
+      text,
       noteTextId : uuid()
     };
 
-    readAndAppend(newNoteTake, "./db/db.json")
+    readAndAppend(newNote, "./db/db.json")
     res.json(`Note added successfully 🚀`);
   } else {
     res.json("error in adding Notes")
   }
 
 });
+
+// Get route for notes page
+app.get("/notes", (req, res) =>
+  res.sendFile(path.join(__dirname, '/public/notes.html'))
+);
+// Get routes for Wildcard route
+app.get("*", (req, res) =>
+  res.sendFile(path.join(__dirname, '/public/index.html'))
+);
+
+
+
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
 );
