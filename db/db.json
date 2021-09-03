@@ -1,12 +1,12 @@
 [
   {
-    "title": "jyothy",
-    "text": "text",
-    "noteTextId": "fd65"
+    "title": "my note1",
+    "text": "Note1",
+    "id": "eebd"
   },
   {
-    "title": "cibu",
-    "text": "my husband",
-    "noteTextId": "7116"
+    "title": "my note 2",
+    "text": "My note 2",
+    "id": "8589"
   }
 ]

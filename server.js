@@ -6,7 +6,8 @@ const uuid = require('./helpers/uuid');
 //const api = require("index.js")
 const util = require('util');
 
-const notes = require('./db/db.json');
+
+const notesjs = require('./db/db.json');
 
 const app = express();
 var PORT = process.env.PORT || 3000;
@@ -64,7 +65,7 @@ const readFromFile = util.promisify(fs.readFile);
 // GET Route for retrieving all the notes
 app.get("/api/notes",(req,res) => {
   console.info(`${req.method} request received for notes`);
-  console.info("I am here")
+  //console.info("I am here")
   readFromFile( "./db/db.json").then((data)=> res.json(JSON.parse(data)));
   console.info("Read db.json")
 })
@@ -78,7 +79,7 @@ app.post("/api/notes",(req, res) => {
     const newNote = {
       title,
       text,
-      noteTextId : uuid()
+      id : uuid()
     };
 
     readAndAppend(newNote, "./db/db.json")
@@ -88,6 +89,31 @@ app.post("/api/notes",(req, res) => {
   }
 
 });
+
+//Delete route 
+
+app.delete('/api/notes/:id', (req, res) => {
+  console.info("in the delete section");
+  const noteId = req.params.id;
+  readFromFile('./db/db.json')
+    .then((data) => JSON.parse(data))
+    .then((json) => {
+      // Make a new array of all tips except the one with the ID provided in the URL
+      const result = json.filter((notesjs) => notesjs.id !== noteId);
+
+      // Save that array to the filesystem
+      writeToFile('./db/db.json', result);
+
+      // Respond to the DELETE request
+      res.json(`Item ${noteId} has been deleted 🗑️`);
+    });
+});
+
+
+
+
+
+
 
 // Get route for notes page
 app.get("/notes", (req, res) =>
