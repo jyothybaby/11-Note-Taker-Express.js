@@ -26,19 +26,19 @@ const readFromFile = util.promisify(fs.readFile);
  *  @param {object} content The content you want to write to the file.
  *  @returns {void} Nothing
  */
- const writeToFile = (destination, content) =>
- fs.writeFile(destination, JSON.stringify(content, null, 2), (err) =>
-   err ? console.error(err) : console.info(`\nData written to ${destination}`)
- );
+const writeToFile = (destination, content) =>
+  fs.writeFile(destination, JSON.stringify(content, null, 2), (err) =>
+    err ? console.error(err) : console.info(`\nData written to ${destination}`)
+  );
 
- /**
- *  Function to read data from a given a file and append some content
- *  @param {object} content The content you want to append to the file.
- *  @param {string} file The path to the file you want to save to.
- *  @returns {void} Nothing
- */
+/**
+*  Function to read data from a given a file and append some content
+*  @param {object} content The content you want to append to the file.
+*  @param {string} file The path to the file you want to save to.
+*  @returns {void} Nothing
+*/
 
- const readAndAppend = (content, file) => {
+const readAndAppend = (content, file) => {
   fs.readFile(file, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
@@ -51,21 +51,21 @@ const readFromFile = util.promisify(fs.readFile);
 };
 
 // GET Route for retrieving all the notes
-app.get("/api/notes",(req,res) => {
+app.get("/api/notes", (req, res) => {
   console.info(`${req.method} request received for notes`);
-  readFromFile( "./db/db.json").then((data)=> res.json(JSON.parse(data)));
+  readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
   console.info("Read db.json")
 });
 
 // Create new notes
-app.post("/api/notes",(req, res) => {
+app.post("/api/notes", (req, res) => {
   console.info(`${req.method} request received to add a note`);
-  const {  title, text } = req.body;
+  const { title, text } = req.body;
   if (req.body) {
     const newNote = {
       title,
       text,
-      id : uuid()
+      id: uuid()
     };
 
     readAndAppend(newNote, "./db/db.json")
