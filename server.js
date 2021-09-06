@@ -5,9 +5,10 @@ const fs = require('fs');
 const uuid = require('./helpers/uuid');
 const util = require('util');
 const notesjs = require('./db/db.json');
+
 //Initilize the app and create a PORT
 const app = express();
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3001;
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
