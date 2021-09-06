@@ -1,11 +1,3 @@
-// var GetStartedBtn = document.getElementById('getstarted');
-// GetStartedBtn = addEventListener("click", (e) => {
-//   e.preventDefault();
-//   window.location.pathname = "/notes"
-// })
-
-
-
 let noteTitle;
 let noteText;
 let saveNoteBtn;

@@ -3,32 +3,19 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const uuid = require('./helpers/uuid');
-//const api = require("index.js")
 const util = require('util');
-
-
 const notesjs = require('./db/db.json');
-
 const app = express();
+
+//Declaring the PORT Number
 var PORT = process.env.PORT || 3000;
-//const PORT = 3001;
+
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //Invoke app.use() and serve static files from the '/public' folder
 app.use(express.static("public"));
-
- //Get route for Homepage
-// app.get("/", (req, res) =>
-//   res.sendFile(path.join(__dirname, '/public/index.html'))
-//);
-
-
-
-
-
-
 
 // Promise version of fs.readFile
 const readFromFile = util.promisify(fs.readFile);
@@ -62,19 +49,18 @@ const readFromFile = util.promisify(fs.readFile);
     }
   });
 };
+
 // GET Route for retrieving all the notes
 app.get("/api/notes",(req,res) => {
   console.info(`${req.method} request received for notes`);
-  //console.info("I am here")
   readFromFile( "./db/db.json").then((data)=> res.json(JSON.parse(data)));
   console.info("Read db.json")
-})
-// create new notes
+});
+
+// Create new notes
 app.post("/api/notes",(req, res) => {
   console.info(`${req.method} request received to add a note`);
-
   const {  title, text } = req.body;
-
   if (req.body) {
     const newNote = {
       title,
@@ -90,7 +76,7 @@ app.post("/api/notes",(req, res) => {
 
 });
 
-//Delete route 
+//Delete the note: for deleting the note, we need to specify the id of the note which we are going to delete.
 
 app.delete('/api/notes/:id', (req, res) => {
   console.info("in the delete section");
@@ -100,20 +86,12 @@ app.delete('/api/notes/:id', (req, res) => {
     .then((json) => {
       // Make a new array of all tips except the one with the ID provided in the URL
       const result = json.filter((notesjs) => notesjs.id !== noteId);
-
       // Save that array to the filesystem
       writeToFile('./db/db.json', result);
-
       // Respond to the DELETE request
       res.json(`Item ${noteId} has been deleted 🗑️`);
     });
 });
-
-
-
-
-
-
 
 // Get route for notes page
 app.get("/notes", (req, res) =>
@@ -123,8 +101,6 @@ app.get("/notes", (req, res) =>
 app.get("*", (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
-
-
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
